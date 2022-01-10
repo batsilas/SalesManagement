@@ -1,0 +1,57 @@
+﻿@using System.Globalization
+@model SalesManagement.ViewModels.SellerDetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Seller</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Seller.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Seller.Name)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Seller.Id">Edit</a> |
+    <a asp-action="Index">Back to Sellers</a>
+</div>
+<div class="mt-5">
+    <h6>List of Sale Amounts Per Month this Year</h6>
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="text-warning" scope="col">Month</th>
+                <th class="text-warning" scope="col">Sale Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 1; i <= 12; i++)
+            {
+                <tr>
+                    @{
+                        string month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i);
+                    }
+                    <td>@month</td>
+                    <td>
+                        @if (Model != null && Model.SalesPerMonth.ContainsKey(i))
+                        {
+                            <span>@Model.SalesPerMonth[i]</span>
+                        }
+                        else
+                        {
+                            <span>0.00</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

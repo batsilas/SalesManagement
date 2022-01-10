@@ -1,0 +1,48 @@
+﻿@model List<SalesManagement.ViewModels.SellersIndexModel>
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>List of Sellers</h1>
+@if (Model != null && Model.Any())
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayName("Name")
+                </th>
+                <th class="text-center">
+                    @Html.DisplayName("Commission Amount")
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Seller.Name)
+                    </td>
+                     <td class="text-center">
+                        <span class="text-success">@item.CommissionAmount</span>
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Seller.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Seller.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Seller.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <tr>There are no Sellers! Create a new Seller <a asp-action="Create">here</a></tr>
+}

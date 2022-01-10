@@ -1,0 +1,44 @@
+﻿@model SalesManagement.Models.Sale
+
+@{
+    ViewData["Title"] = "Edit";
+    SelectList sellers = ViewData["Sellers"] != null ? (SelectList)ViewData["Sellers"] : new SelectList(new List<Seller>(), "Id", "Name");
+}
+
+<h1>Edit</h1>
+
+<h4>Sale</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+             <div class="form-group">
+                <label asp-for="SellerId" class="control-label">Seller</label>
+                <select asp-for="SellerId" class="form-control" asp-items="@sellers">
+                        <option>Please select a seller</option>
+                    </select>       
+                <span asp-validation-for="SellerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SaleDate" class="control-label"></label>
+                <input asp-for="SaleDate" class="form-control" />
+                <span asp-validation-for="SaleDate" class="text-danger"></span>
+            </div>
+            <div class="mt-2 form-group">
+                <input type="submit" value="Save" class="btn btn-primary" /> |
+                <a asp-action="Index">Back to Sales</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

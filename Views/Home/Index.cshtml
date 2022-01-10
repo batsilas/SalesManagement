@@ -1,0 +1,21 @@
+﻿@model SalesManagement.ViewModels.HomeModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <i>SalesManagement, the easy way to manage your sales!</i>
+</div>
+<div class="container mt-5">
+  <div class="col-md-12 text-center">
+    <a class="btn btn-primary" asp-area="" asp-controller="Sellers" asp-action="Index">Sellers</a>
+    <a class="btn btn-primary" asp-area="" asp-controller="Sales" asp-action="Index">Sales</a>
+  </div>
+</div>
+
+<ul class="mt-5 list-group">
+  <li class="list-group-item">There are @(Model != null ? Model.NumOfSellers : 0) Sellers</li>
+  <li class="list-group-item">Total Sales Amount: @(Model != null ? Model.TotalSalesAmount : 0)</li>
+</ul>

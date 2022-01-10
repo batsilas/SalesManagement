@@ -1,0 +1,49 @@
+﻿@model SalesManagement.Models.Sale
+
+@{
+    ViewData["Title"] = "Create";
+    SelectList sellers = ViewData["Sellers"] != null ? (SelectList)ViewData["Sellers"] : new SelectList(new List<Seller>(), "Id", "Name");
+}
+
+<h1>Create</h1>
+
+<h4>Sale</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SellerId" class="control-label">Seller</label>
+                <select asp-for="SellerId" class="form-control" asp-items="@sellers">
+                    <option>Please select a seller</option>
+                </select>
+                <span asp-validation-for="SellerId" class="text-danger"></span>
+            </div>
+            @if (sellers == null || !sellers.Any())
+            {
+                <small class="text-warning">There are no Sellers! Create a new Seller <a asp-controller="Sellers" asp-action="Create">here</a></small>
+            }
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SaleDate" class="control-label"></label>
+                <input asp-for="SaleDate" class="form-control" />
+                <span asp-validation-for="SaleDate" class="text-danger"></span>
+            </div>
+            <div class="mt-2 form-group">
+                <input type="submit" value="Create" class="btn btn-primary" /> |
+                <a asp-action="Index">Back to Sales</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}
