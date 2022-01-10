@@ -18,10 +18,11 @@ namespace SalesManagement.Services
         {
             context = contextByProgram;
         }
+
         public async Task<Seller> CreateSeller(CreateSellerOptions options)
         {
             if (options == null)
-                return null;
+                return await Task.FromResult(new Seller());
 
             var Seller = new Seller()
             {
@@ -33,14 +34,14 @@ namespace SalesManagement.Services
             if (await context.SaveChangesAsync() > 0)
                 return Seller;
 
-            return null;
+            return await Task.FromResult(new Seller());
         }
 
         public async Task<bool> EditSeller(EditSellerOptions options)
         {
 
             if (options == null || options.Id == 0)
-                return false;
+                return await Task.FromResult(false);
 
             var Seller = SearchSellers(new SearchSellerOptions()
             {
@@ -48,22 +49,22 @@ namespace SalesManagement.Services
             }).SingleOrDefault();
 
             if (Seller == null)
-                return false;
+                return await Task.FromResult(false);
 
             if (!string.IsNullOrWhiteSpace(options.Name))
                 Seller.Name = options.Name;
 
             if (await context.SaveChangesAsync() > 0)
-                return true;
+                return await Task.FromResult(true);
 
-            return false;
+            return await Task.FromResult(false);
         }
 
         public async Task<bool> DeleteSeller(DeleteSellerOptions options)
         {
 
             if (options == null || options.Id == 0)
-                return false;
+                return await Task.FromResult(false);
 
             var Seller = SearchSellers(new SearchSellerOptions()
             {
@@ -71,21 +72,24 @@ namespace SalesManagement.Services
             }).SingleOrDefault();
 
             if (Seller == null)
-                return false;
+                return await Task.FromResult(false);
 
             context.Seller.Remove(Seller);
 
             if (await context.SaveChangesAsync() > 0)
-                return true;
+                return await Task.FromResult(true);
 
-            return false;
+            return await Task.FromResult(false);
         }
 
         public IQueryable<Seller> SearchSellers(SearchSellerOptions options)
         {
             if (options == null || options.Id == 0)
-                return null;
-            
+                return context
+                      .Set<Seller>()
+                      .Where(s => s.Id == 0)
+                      .AsQueryable();
+
             var query = context
                 .Set<Seller>()
                 .AsQueryable();
@@ -105,8 +109,8 @@ namespace SalesManagement.Services
         public Seller GetSellerById(GetSellerByIdOptions options)
         {
 
-            if (options == null)
-                return null;
+            if (options == null || options.Id == 0)
+                return new Seller();
 
             var Seller = context
                 .Set<Seller>()
@@ -115,8 +119,8 @@ namespace SalesManagement.Services
 
             if (Seller != null)
                 return Seller;
-            
-            return null;
+
+            return new Seller();
         }
 
         public bool SellerExists(int? id)

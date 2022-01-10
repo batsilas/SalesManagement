@@ -21,7 +21,7 @@ namespace SalesManagement.Services
         public async Task<Sale> CreateSale(CreateSaleOptions options)
         {
             if (options == null)
-                return null;
+                return await Task.FromResult(new Sale());
 
             var Sale = new Sale()
             {
@@ -35,14 +35,14 @@ namespace SalesManagement.Services
             if (await context.SaveChangesAsync() > 0)
                 return Sale;
 
-            return null;
+            return await Task.FromResult(new Sale());
         }
 
         public async Task<bool> EditSale(EditSaleOptions options)
         {
 
             if (options == null || options.Id == 0)
-                return false;
+                return await Task.FromResult(false);
 
             var Sale = SearchSales(new SearchSaleOptions()
             {
@@ -50,7 +50,7 @@ namespace SalesManagement.Services
             }).SingleOrDefault();
 
             if (Sale == null)
-                return false;
+                return await Task.FromResult(false);
 
             if (options.SellerId != 0)
                 Sale.SellerId = options.SellerId;
@@ -59,16 +59,16 @@ namespace SalesManagement.Services
             Sale.SaleDate = options.SaleDate;
 
             if (await context.SaveChangesAsync() > 0)
-                return true;
+                return await Task.FromResult(true);
 
-            return false;
+            return await Task.FromResult(false);
         }
 
         public async Task<bool> DeleteSale(DeleteSaleOptions options)
         {
 
             if (options == null || options.Id == 0)
-                return false;
+                return await Task.FromResult(false);
 
             var Sale = SearchSales(new SearchSaleOptions()
             {
@@ -76,20 +76,23 @@ namespace SalesManagement.Services
             }).SingleOrDefault();
 
             if (Sale == null)
-                return false;
+                return await Task.FromResult(false);
 
             context.Sale.Remove(Sale);
 
             if (await context.SaveChangesAsync() > 0)
-                return true;
+                return await Task.FromResult(true);
 
-            return false;
+            return await Task.FromResult(false);
         }
 
         public IQueryable<Sale> SearchSales(SearchSaleOptions options)
         {
-            if (options == null)
-                return null;
+            if (options == null || options.Id == 0)
+                return context
+                .Set<Sale>()
+                .Where(s => s.Id == 0)
+                .AsQueryable();
 
             var query = context
                 .Set<Sale>()
@@ -120,8 +123,8 @@ namespace SalesManagement.Services
         public Sale GetSaleById(GetSaleByIdOptions options)
         {
 
-            if (options == null)
-                return null;
+            if (options == null || options.Id == 0)
+                return new Sale();
 
             var Sale = context
                 .Set<Sale>()
@@ -132,7 +135,7 @@ namespace SalesManagement.Services
             if (Sale != null)
                 return Sale;
 
-            return null;
+            return new Sale();
         }
 
         public bool SaleExists(int? id)
